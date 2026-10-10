@@ -234,23 +234,66 @@ Customer_Connect/
 └── README.md
 ```
 
-## Roadmap
+## 🗺️ Roadmap — From Intelligent Support to Autonomous Resolution
 
-- [x] Bounded tool-using agent workflow
-- [x] Order, payment, delivery, refund, and return investigation
-- [x] Security guardrails and customer ownership checks
-- [x] Conversation memory and support-ticket escalation
-- [x] React–FastAPI integration
-- [ ] Live e-commerce platform integration
-- [ ] Production identity and role-based authorization
-- [ ] PostgreSQL and database migrations
-- [ ] Deployment automation and production monitoring
+ResolveAI is being developed around one goal: **turn customer support from a reactive conversation into a secure, evidence-driven resolution process.**
 
-## Current scope
+<table>
+<tr>
+<td width="32%" valign="top">
 
-ResolveAI currently uses seeded demonstration data; it is **not connected to a live e-commerce platform**. External LLM behavior depends on provider configuration. The application is a portfolio and development project and requires additional infrastructure and identity controls before production use.
+### 01 · Foundation
 
-Security documentation: [SECURITY.md](docs/SECURITY.md) · [PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md)
+**Secure Agent Core**
+
+- [x] Bounded agent execution
+- [x] Intent and entity extraction
+- [x] Controlled tool selection
+- [x] Verified-result response generation
+- [x] Conversation memory
+- [x] Support-ticket escalation
+- [x] API and ownership safeguards
+
+</td>
+<td width="32%" valign="top">
+
+### 02 · Integration
+
+**Real-World Connectivity**
+
+- [ ] Connect real e-commerce APIs
+- [ ] Integrate live order and delivery systems
+- [ ] Add authenticated customer identities
+- [ ] Introduce role-based permissions
+- [ ] Add human approval for sensitive actions
+- [ ] Expand automated integration testing
+
+</td>
+<td width="32%" valign="top">
+
+### 03 · Scale
+
+**Production-Ready Platform**
+
+- [ ] Migrate to PostgreSQL
+- [ ] Introduce shared rate-limit storage
+- [ ] Add monitoring and alerting
+- [ ] Implement backups and retention policies
+- [ ] Automate deployment and security checks
+- [ ] Evaluate reliability under concurrent load
+
+</td>
+</tr>
+</table>
+
+### 🔭 Long-Term Vision
+
+- **Context-aware resolution:** Investigate related order, payment, and delivery events across a conversation.
+- **Human–AI collaboration:** Escalate complex cases with verified evidence and a clear audit trail.
+- **Policy-aware actions:** Require authorization and confirmation before sensitive operations.
+- **Operational intelligence:** Identify recurring support issues and resolution bottlenecks from appropriately anonymized data.
+- **Extensible integrations:** Connect additional commerce platforms through narrowly scoped, auditable tools.
+
 
 ---
 
@@ -258,7 +301,7 @@ Security documentation: [SECURITY.md](docs/SECURITY.md) · [PRODUCTION_READINESS
 
 ### Built by Priyanshi Sharma
 
-**AI Development · Agentic Systems · Python · Full-Stack Engineering**
+**AI Development · Agentic Systems · Python · Open-Source Contributor**
 
 <a href="https://github.com/priyanshi17112007"><img src="https://img.shields.io/badge/GitHub-@priyanshi17112007-181717?style=for-the-badge&logo=github" alt="Priyanshi Sharma on GitHub"/></a>
 
