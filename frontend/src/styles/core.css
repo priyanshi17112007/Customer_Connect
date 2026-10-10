@@ -1,0 +1,303 @@
+/* AI Core - layered CSS rings. All motion is transform/opacity only. */
+
+.core {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0 var(--space-4);
+}
+
+.core__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 148px;
+  height: 148px;
+}
+
+/* Concentric rings */
+.core__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+}
+
+.core__ring--outer {
+  width: 100%;
+  height: 100%;
+  border-color: rgba(34, 211, 238, 0.22);
+  animation: core-breathe 5.5s var(--ease-in-out) infinite;
+}
+
+.core__ring--mid {
+  width: 74%;
+  height: 74%;
+  border-color: rgba(167, 139, 250, 0.26);
+  animation: core-breathe 4.5s var(--ease-in-out) infinite reverse;
+}
+
+.core__ring--inner {
+  width: 50%;
+  height: 50%;
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+/* Dashed rotating ring - active only while a request is running. */
+.core__orbit {
+  position: absolute;
+  width: 86%;
+  height: 86%;
+  border-radius: 50%;
+  border: 1px dashed rgba(120, 165, 220, 0.28);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+.core__satellite {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.9);
+}
+
+.core__orb {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 34% 30%,
+    rgba(255, 255, 255, 0.9),
+    var(--accent-cyan) 42%,
+    var(--accent-violet) 100%
+  );
+  box-shadow:
+    0 0 26px -4px rgba(34, 211, 238, 0.6),
+    inset 0 0 12px rgba(255, 255, 255, 0.28);
+  animation: core-breathe 3.6s var(--ease-in-out) infinite;
+}
+
+/* Vertical light sweep across the core. */
+.core__scan {
+  position: absolute;
+  width: 62%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(34, 211, 238, 0.85),
+    transparent
+  );
+  opacity: 0;
+  filter: blur(0.4px);
+}
+
+.core__meta {
+  text-align: center;
+}
+
+.core__name {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+}
+
+.core__state {
+  margin: 4px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+  transition: color var(--dur) var(--ease-out);
+}
+
+.core__detail {
+  margin: var(--space-2) auto 0;
+  max-width: 260px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------ states */
+
+@keyframes core-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.045);
+    opacity: 1;
+  }
+}
+
+@keyframes core-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes core-scan-sweep {
+  0% {
+    transform: translateY(-58px);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(58px);
+    opacity: 0;
+  }
+}
+
+@keyframes core-flash-ok {
+  0% {
+    box-shadow:
+      0 0 26px -4px rgba(34, 211, 238, 0.6),
+      inset 0 0 12px rgba(255, 255, 255, 0.28);
+  }
+  50% {
+    box-shadow:
+      0 0 46px 2px rgba(52, 211, 153, 0.75),
+      inset 0 0 18px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow:
+      0 0 26px -4px rgba(34, 211, 238, 0.6),
+      inset 0 0 12px rgba(255, 255, 255, 0.28);
+  }
+}
+
+@keyframes core-flash-err {
+  0%,
+  100% {
+    box-shadow:
+      0 0 26px -4px rgba(34, 211, 238, 0.6),
+      inset 0 0 12px rgba(255, 255, 255, 0.28);
+  }
+  50% {
+    box-shadow:
+      0 0 40px -2px rgba(251, 113, 133, 0.75),
+      inset 0 0 16px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* ANALYZING - faster pulse, scan sweep on */
+.core--analyzing .core__orb {
+  animation-duration: 2.1s;
+}
+.core--analyzing .core__scan {
+  animation: core-scan-sweep 1.9s var(--ease-in-out) infinite;
+}
+.core--analyzing .core__state {
+  color: var(--accent-cyan);
+}
+
+/* RESOLVING - rotating orbit */
+.core--resolving .core__orbit {
+  opacity: 1;
+  animation: core-spin 2.6s linear infinite;
+}
+.core--resolving .core__orb {
+  animation-duration: 1.5s;
+}
+.core--resolving .core__scan {
+  animation: core-scan-sweep 1.4s var(--ease-in-out) infinite;
+}
+.core--resolving .core__state {
+  color: var(--accent-violet);
+}
+
+/* COMPLETE - single success flash, then settle */
+.core--complete .core__orb {
+  animation: core-flash-ok 900ms var(--ease-out) 1;
+}
+.core--complete .core__state {
+  color: var(--success);
+}
+.core--complete .core__ring--outer {
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+/* ERROR - single warning pulse */
+.core--error .core__orb {
+  animation: core-flash-err 900ms var(--ease-out) 1;
+}
+.core--error .core__state {
+  color: var(--danger);
+}
+.core--error .core__ring--outer {
+  border-color: rgba(251, 113, 133, 0.45);
+}
+
+@media (max-width: 900px) {
+  /* Reclaim vertical space for the transcript on tablets. */
+  .core {
+    gap: var(--space-2);
+    padding: 0 0 var(--space-2);
+  }
+  .core__stage {
+    width: 108px;
+    height: 108px;
+  }
+  .core__orb {
+    width: 26px;
+    height: 26px;
+  }
+  .core__detail {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .core__stage {
+    width: 92px;
+    height: 92px;
+  }
+  .core__orb {
+    width: 22px;
+    height: 22px;
+  }
+  .core__name {
+    font-size: 9.5px;
+  }
+  .core__state {
+    font-size: 10px;
+  }
+}
+
+/* Short viewports: compact the core further, keep the transcript usable. */
+@media (max-width: 900px) and (max-height: 720px) {
+  .core__stage {
+    width: 72px;
+    height: 72px;
+  }
+  .core__orb {
+    width: 18px;
+    height: 18px;
+  }
+  .core__meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+  .core__state {
+    margin: 0;
+  }
+}

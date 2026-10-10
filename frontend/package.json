@@ -1,0 +1,20 @@
+{
+  "name": "resolveai-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "ResolveAI - AI-Powered Customer Support Resolution System (Phase 5A)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}

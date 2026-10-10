@@ -1,0 +1,38 @@
+# Runtime dependencies for the ResolveAI backend.
+#
+# IMPORTANT: these are the versions the application was actually built and
+# validated against. The previous file pinned much older releases
+# (fastapi 0.109.0, pydantic 2.5.3, sqlalchemy 2.0.25) that were never the ones
+# installed, so installing from it would have produced an untested environment.
+#
+# starlette is intentionally not pinned: it is resolved by fastapi.
+#
+# The following were previously declared but are neither imported nor installed,
+# and have been removed:
+#   pydantic-settings, alembic, python-multipart, langchain, langchain-community,
+#   langgraph, python-jose, passlib, bcrypt, slowapi, aiofiles,
+#   pytest, pytest-asyncio, pytest-cov
+#
+# There is deliberately no JWT or password-hashing dependency: the service
+# authenticates with a single shared API key compared in constant time, and has
+# no token system. Adopting per-customer identity would require adding one.
+
+# --- web framework and ASGI server
+fastapi==0.138.1
+uvicorn==0.49.0
+
+# --- validation and ORM
+pydantic==2.13.4
+sqlalchemy==2.1.3
+
+# --- configuration loading (.env)
+python-dotenv==1.2.2
+
+# --- optional LLM rephrase layer
+# Imported lazily inside a try/except. With no API keys set the agent runs
+# fully deterministic and these are never used.
+langchain-core==1.4.8
+openai==1.95.0
+
+# --- test client (not imported by the application)
+httpx==0.28.1

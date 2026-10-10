@@ -1,0 +1,547 @@
+/* App shell: grid, panels, form fields, buttons, status lists, responsive.
+   Chat/transcript styles live in app.css. Both are imported once in App.jsx. */
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
+  }
+  50% {
+    opacity: 0.65;
+    box-shadow: 0 0 0 5px rgba(52, 211, 153, 0);
+  }
+}
+
+@keyframes fade-slide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  /* minmax(0,1fr) stops the implicit track from growing to max-content and
+     overflowing narrow viewports. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--header-h) minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+}
+
+.app__main {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--rail-w);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  min-height: 0;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------- sidebars */
+
+.app__sidebar,
+.app__rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* --------------------------------------------------------------- centre */
+
+.app__center {
+  display: grid;
+  grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Bands are pinned explicitly rather than placed in document order: the
+   escalation card and the error banner are conditional, so implicit placement
+   would push the transcript out of the flexible row whenever they are absent. */
+.app__center > .core {
+  grid-row: 1;
+}
+.app__center > .act {
+  grid-row: 2;
+}
+.app__center > .escalation {
+  grid-row: 3;
+}
+.app__center > .banner {
+  grid-row: 4;
+}
+.app__center > .chat {
+  grid-row: 5;
+}
+.app__center > .app__composer {
+  grid-row: 6;
+}
+
+/* Stack of context panels. At <=900px the sidebar is a grid of two columns
+   (one column on phones), so the panels need their own wrapper. */
+.sidebar__panels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .sidebar__panels {
+    display: contents;
+  }
+}
+
+/* Collapsible context toggle - only meaningful on narrow screens. */
+.ctx-toggle {
+  display: none;
+}
+
+/* --------------------------------------------------------------- panels */
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--dur) var(--ease-out);
+}
+
+.panel:hover {
+  border-color: var(--border-strong);
+}
+
+.panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.panel__title {
+  margin: 0;
+}
+
+.panel__badge {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.panel__badge--ok {
+  color: var(--success);
+  border-color: rgba(52, 211, 153, 0.4);
+  background: var(--success-dim);
+}
+.panel__badge--bad {
+  color: var(--danger);
+  border-color: rgba(251, 113, 133, 0.4);
+  background: var(--danger-dim);
+}
+
+.panel__body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.panel__body--form {
+  gap: var(--space-4);
+}
+
+.panel__note {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.panel__alert {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  border: 1px solid rgba(251, 113, 133, 0.32);
+  background: var(--danger-dim);
+  animation: fade-slide var(--dur) var(--ease-out);
+}
+
+.panel__alert-title {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--danger);
+}
+
+.panel__alert-text {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------- status list */
+
+.status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.status-list__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.status-list__label {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.status-list__value {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.status-list__value--on {
+  color: var(--success);
+}
+.status-list__value--off {
+  color: var(--danger);
+}
+.status-list__value--plain {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.status-list__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-list__value--on .status-list__dot {
+  animation: pulse-dot 2.4s var(--ease-in-out) infinite;
+}
+
+/* --------------------------------------------------------- control list */
+
+.control-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.control-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.control-list__mark {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.control-list__mark--on {
+  color: var(--success);
+  background: var(--success-dim);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+}
+
+.control-list__mark--idle {
+  color: var(--text-muted);
+  background: rgba(120, 165, 220, 0.08);
+  border: 1px solid var(--border);
+}
+
+/* ---------------------------------------------------------------- fields */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.field__lock {
+  color: var(--accent-cyan);
+  font-size: 9px;
+}
+
+.field__input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  font-family: var(--font-sans);
+  transition: border-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+}
+
+.field__input--secret {
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+}
+
+.field__input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.field__input:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  background: rgba(8, 13, 24, 0.95);
+  box-shadow: var(--glow-cyan);
+}
+
+.field__input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.field__hint {
+  margin: 0;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+/* -------------------------------------------------------------------- kv */
+
+.kv {
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.kv__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.kv__key {
+  margin: 0;
+}
+
+.kv__val {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kv__val--on {
+  color: var(--success);
+}
+.kv__val--off {
+  color: var(--danger);
+}
+
+.kv__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* --------------------------------------------------------------- buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out),
+    background var(--dur) var(--ease-out);
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--secondary {
+  border-color: var(--border-cyan);
+  color: var(--accent-cyan);
+  background: var(--accent-cyan-dim);
+}
+
+/* ---------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .app__main {
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  }
+  .app__rail {
+    grid-column: 1 / -1;
+  }
+  .control-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 900px) {
+  .app__main {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+  /* The context stack becomes collapsible so the conversation keeps its room. */
+  .ctx-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    cursor: pointer;
+  }
+  .ctx-toggle__chev {
+    font-size: 9px;
+    color: var(--accent-cyan);
+  }
+  .app__sidebar {
+    /* Capped and internally scrollable so the composer is always reachable. */
+    max-height: 28vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+  /* Collapse only the panels, never the sidebar itself: the toggle button
+     lives inside the sidebar, so hiding the sidebar would hide the only
+     control that can expand it again. */
+  .app__sidebar--collapsed .sidebar__panels {
+    display: none;
+  }
+  .app__rail {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .app__sidebar {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: 26vh;
+  }
+  .control-list {
+    flex-direction: column;
+  }
+}
+
+/* Short viewports: give the transcript priority over the core decoration. */
+@media (max-width: 900px) and (max-height: 720px) {
+  .app__sidebar {
+    max-height: 22vh;
+  }
+}
